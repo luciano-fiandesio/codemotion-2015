@@ -86,22 +86,30 @@
 
 	sudo service apache2 status
 
-## ports
+## ports and linking
 
-	docker run --name "port-demo" -it luciano-fiandesio/node /bin/bash
+	docker pull wordpress:latest
 
-	git clone https://github.com/DonaldDerek/SimpleChat.git
+	docker pull mysql:latest
 
+	docker images
+
+	docker run --name mysqlwp -e MYSQL_ROOT_PASSWORD=wordpressdocker -d mysql
+
+	docker run --name wordpress --link mysqlwp:mysql -p 80:80 -d wordpress
+
+	# link wants source container name : alias name
 
 
 ## volumes
 
+	docker run -ti -v /Users/luciano/Downloads/:/downloads ubuntu /bin/bash
 
-## intra docker container communication
 
-
+## docker file demo
 
 ## docker compose
+	
 
 
 

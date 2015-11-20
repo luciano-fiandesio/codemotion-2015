@@ -68,3 +68,11 @@ http://collabnix.com/archives/516
 networking
 
 http://www.dasblinkenlichten.com/docker-networking-101/
+
+automatically start container
+
+https://docs.docker.com/v1.8/articles/host_integration/
+
+docker compose
+
+http://anandmanisankar.com/posts/docker-container-nginx-node-redis-example/

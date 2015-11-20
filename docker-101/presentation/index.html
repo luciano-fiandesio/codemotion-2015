@@ -63,6 +63,7 @@
 							<li>25 years of software development</li>
 							<li>Consulting on lightweight approach to software factory</li>
 							<li>Author of "Groovy 2 Cookbook" for Packt</li>
+							<li>Dad</li>
 							<li>github: <a href="https://github.com/luciano-fiandesio">https://github.com/luciano-fiandesio</a></li>
 						</ul>
 					</p>
@@ -83,7 +84,7 @@
 						<li>What is Docker</li>
 						<li>Docker components</li>
 						<li>Live Demo</li>
-						<li>More on Docker galaxy</li>
+						<li>Additional resources</li>
 					</ul>
 				</section>
 
@@ -166,20 +167,12 @@
 					<aside class="notes">
 						<ul>
 	       					<li>Docker requires: Kernel 3.8 is the minumum, 3.10 is reccomended</li>
+	       					<li>Docker is no longer based on LXC contaniners, but on a similar technology, <strong>libcontainer</strong></li>
 	       				</ul>
        					 
        				</aside>
 				</section>
 
-				<section>
-					<h3>
-					Docker is no longer based on LXC contaniners, but on a similar technology, <strong>libcontainer</strong>
-					</h3>
-					<ul>
-						<li>libcontainer restricts the container to a single process</li>
-						<li>TODO</li>
-					</ul>
-				</section>
 
 				<section>
 					<h3>cgroups</h3>
@@ -241,7 +234,7 @@
 							<li>A Docker client talks to a Docker daemon, which execute the work</li>
 							<li>Docker executables are written in Go</li>
 							<li>The Docker daemon also exposes a RESTFul API</li>
-							<li>Both client and server must be executed as root!</li>
+							<li><del>Both client and server must be executed as root!</del></li>
 						</ul>	
 					</p>
 					<aside class="notes">
@@ -322,11 +315,6 @@
 				</section>
 
 				<section>
-					<p></p>
-				</section>
-
-				
-				<section>
 					<h2>Docker Files</h2>
 					<p>
 						<ul>
@@ -341,7 +329,32 @@
 				</section>
 					
 				<section>
-					TODO docker file example
+				<h2>Dockerfile example</h2>
+				<pre><code class="hljs" data-trim contenteditable>
+
+					
+# Version: 0.0.1
+FROM ubuntu:14.04
+MAINTAINER Rocky Balboa "rocky@gmail.com"
+RUN apt-get update && apt-get install -y nginx
+RUN echo 'Hi, I am in your container' \
+       >/usr/share/nginx/html/index.html
+EXPOSE 80
+				</code></pre>
+				<p>Build the image</p>
+				<pre><code class="hljs" data-trim contenteditable>
+				docker build -t="balboa/myapp" .		
+				</code></pre>
+				
+				<aside class="notes">
+       				<ul>
+       					<li>First instruction must be FROM: select the base image</li>
+       					<li>RUN executes commands on the current image (/bin/sh)</li>
+       					<li>EXPOSE tells Docker that the process will use this port. Port is not automatically opened!</li>	
+       				</ul>
+
+       			</aside>
+
 				</section>
 
 
@@ -369,6 +382,11 @@
 				</section>
 
 				<section>
+
+				<img src="images/registry.png">
+				</section>
+
+				<section>
 					<h2>Docker Machine</h2>
 					<p>
 						A tool to simplify the automatic creation, configuration and management of Docker-enabled machines, wheter they are VMs running locally in Virtualbox or in a cloud provider such AWS
@@ -385,7 +403,20 @@ $ create --driver digitalocean dev-cloud # start machine locally using digitaloc
 
 				<section>
 					<h2>Docker Compose</h2>
-					TODO
+					<ul>
+						<li>A tool for running multi-container applications</li>
+						<li>Single file configuration</li>
+						<li>Great for dev environments, CI, staging</li>
+						<li>Written in Python, was Fig (acquired by Docker)</li>
+						<li>Useful for building complex environments in a reproducible way</li>
+					</ul>
+					<aside class="notes">
+						<ul>
+	       					ORCHESTRATION
+
+	       				</ul>
+       					 
+       				</aside>
 				</section>
 
 				<section>
@@ -437,8 +468,46 @@ docker rmi      # remove an image
 
 				</section>	
 
-				
+				<section>
+					<h2>Containers communication</h2>
+					<p>
+						
+					Containers can be linked together (container linking)
+					</p>
 
+					<pre><code class="hljs" data-trim contenteditable>
+$ docker run -d --name database -e MYSQL_ROOT_PASSWORD=root mysql
+$ docker run -d --link database:db --name web runseb/hostname
+$ docker run -d --link web:application --name lb nginx
+					</code></pre>
+					<p>
+						<span style="color:black;background-color:LemonChiffon;">
+							Container linking works well on a single host, but large-scale systems need other discovery mechanisms.
+						</span>
+					</p>	
+					<aside class="notes">
+       					In the example, we build 3 containers: db, web and load balancer.
+    				</aside>	
+				</section>
+
+				<section>
+					<h2>Containers volumes</h2>
+					<p>
+					Docker can mount host voulumes in read/write mode. Data are shared between host and container 
+					</p>
+
+					<pre><code class="hljs" data-trim contenteditable>
+$ docker run -ti -v "$PWD":/shared ubuntu:14.04 /bin/bash
+					</code></pre>
+				</section>
+
+				<section>
+					<h1>Additional resources</h1>
+				</section>
+				<section>
+					<h2>We just scratched the surface!</h2>
+				</section>
+				
 			</div>
 
 		</div>
