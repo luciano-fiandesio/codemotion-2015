@@ -44,3 +44,23 @@ https://www.youtube.com/watch?v=VH_6LwPWgao
 
 lxc -- good!
 https://www.youtube.com/watch?v=ZD7HDrtkZoI
+
+
+dockerize node app
+
+https://ifelse.io/2015/08/17/dockerizing-a-nodejs-app/
+
+http://www.giacomovacca.com/2015/01/dockerize-nodejs-websocket-server-in-5.html
+
+
+docker cheat sheet
+
+https://github.com/wsargent/docker-cheat-sheet
+
+good intro
+
+http://www.infoq.com/interviews/lindsay-docker
+
+on images
+
+http://collabnix.com/archives/516
