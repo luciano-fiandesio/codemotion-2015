@@ -119,7 +119,7 @@
 				</section>
 
 				<section>
-					<img src="images/virtualization-view-1.png"/>
+					<img src="images/virtualization-1.png"/>
 					<aside class="notes">
        					<ul>
 	       					<li>not very efficient, becuase the OS has to power the hypervisor and the guest os-es</li>
@@ -130,7 +130,7 @@
 
 
 				<section>
-					<img src="images/virtualization-view-2.png"/>
+					<img src="images/virtualization-2.png"/>
 					<aside class="notes">
        					<ul>
 	       					<li>no guest os boxes!</li>
@@ -179,16 +179,6 @@
 
 
 				<section>
-					<h3>cgroups</h3>
-					<ul>
-						<li>Built into Kernel (RHEL7/Debian/etc)</li>
-						<li>Generically isolates resource usage (CPU, memory, disk, network)</li>
-						<li>Guarantee resources to app/set of apps</li>
-						<li>Can be adjusted on the fly</li>
-						<li>Can monitor the cgroup itself to see utilization</li>
-					</ul>
-				</section>
-				<section>
 					<h3>Kernel namespaces</h3>
 					<ul>
 						<li>Isolating views of the system</li>
@@ -208,6 +198,38 @@
 						<li><p><strong>user</strong> (UIDs)</p></li>
 					</ul>
 				</section>
+
+				<section>
+					<h3>cgroups - control groups</h3>
+					<ul>
+						<li>Built into Kernel</li>
+						<li>Generically isolates resource usage (CPU, memory, disk, network)</li>
+						<li>Guarantee resources to app/set of apps</li>
+						<li>Can be adjusted on the fly</li>
+						<li>Can monitor the cgroup itself to see utilization</li>
+					</ul>
+				</section>
+				
+
+				<section>
+					<h3>What about performances?</h3>
+					<ul>
+						<li><span style="color:red;"><strong>Processes</strong></span> are isolated, but run directly on the host</li>
+						<li><span style="color:red;"><strong>CPU</strong></span> - native performance</li>
+						<li><span style="color:red;"><strong>Memory</strong></span> - a few % required for bean keeping</li>
+						<li><span style="color:red;"><strong>Network</strong></span> - small overhead, can be reduced to 0</li>
+					</ul>
+					<aside class="notes">
+						<ul>
+	       					<li>For memory intensive apps (like Java) memory can be a problem</li>
+	       					<li>It is possible to disable standard network handling (NAT, bridge) and assign a phisical
+	       					interface to a container, no more performance drop!</li>
+	       				</ul>
+       					 
+       				</aside>
+				
+				</section>
+				
 
 				<section>
 					<h3>To recap</h3>
@@ -334,22 +356,31 @@
 					
 				<section>
 				<h2>Dockerfile example</h2>
-				<pre><code class="hljs" data-trim contenteditable>
-
-					
+				<pre><code class="hljs" data-trim style="max-height: 600px;">
 # Version: 0.0.1
 FROM ubuntu:14.04
 MAINTAINER Rocky Balboa "rocky@gmail.com"
-RUN apt-get update && apt-get install -y nginx
-RUN echo 'Hi, I am in your container' \
-       >/usr/share/nginx/html/index.html
-EXPOSE 80
+
+RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
+
+RUN echo 'deb http://download-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' | sudo tee /etc/apt/sources.list
+
+RUN apt-get update
+
+# note the -y flag, for non interactive
+RUN apt-get install -y mongodb-org
+
+RUN mkdir -p /data/db
+
+# This mongo instance will run in a container
+# so it must be configured to accept connections from foreign hosts
+RUN echo "bind_ip = 0.0.0.0" >> /etc/mongdodb.conf
+
+EXPOSE 27017
+
+# Set the default command for this image
+CMD ["mongod"]
 				</code></pre>
-				<p>Build the image</p>
-				<pre><code class="hljs" data-trim contenteditable>
-				docker build -t="balboa/myapp" .		
-				</code></pre>
-				
 				<aside class="notes">
        				<ul>
        					<li>First instruction must be FROM: select the base image</li>
@@ -361,6 +392,12 @@ EXPOSE 80
 
 				</section>
 
+				<section>
+					<p>Build the image</p>
+				<pre><code class="hljs" data-trim contenteditable>
+				docker build -t="balboa/mongo" .		
+				</code></pre>
+				</section>
 
 				<section>
 					<h2>Docker Registry</h2>
