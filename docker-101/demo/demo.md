@@ -105,10 +105,14 @@
 
 	docker run -ti -v /Users/luciano/Downloads/:/downloads ubuntu /bin/bash
 
-
 ## docker file demo
+	
+	see demo
+
 
 ## docker compose
+
+	see demo
 	
 
 
